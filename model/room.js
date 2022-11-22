@@ -9,6 +9,9 @@ const roomSchema = new Schema({
     name: {
         type: String,
     },
+    password: {
+        type: String,
+    },
     content: {
         type: String,
     }

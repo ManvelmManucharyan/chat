@@ -2,14 +2,15 @@ require("dotenv").config();
 const socketio = require("socket.io");
 const formatMessages = require("../utils/messages");
 const UserService = require("./user.service");
+const RoomService = require("./room.service");
+const { Room } = require("../model");
 
 const botName = process.env.BOT_NAME;
 
 function socket(server) {
     const io = socketio(server);
-    io.on("connection", socket => {
+    io.on("connection", async socket => {
         socket.on("joinRoom", async ({ username, room }) => {
-            const user = await UserService.createUser(socket.id, username, room);
             socket.join(user.room);
     
             socket.emit("message", formatMessages(botName ,`Welcome to the ChatBoard ${user.username}`));
@@ -21,6 +22,10 @@ function socket(server) {
                 users: await UserService.getRoomUsers(user.room)
             })
         
+        })
+
+        io.on("roomNames", ()=>{
+            socket.emit("roomNames", "hello")
         })
     
         socket.on("chatMessage", async (msg) => {

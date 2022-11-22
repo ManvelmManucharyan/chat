@@ -4,12 +4,15 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     id: {
         type: String,
-        required: true,
+        requied: true
     },
     username: {
         type: String,
     },
     room: {
+        type: String,
+    },
+    socketId: {
         type: String,
     }
 }, { timestamps: true });

@@ -5,7 +5,7 @@ const userList = document.getElementById("users");
 
 const socket = io();
 
-const { username, room } = Qs.parse(location.search, {
+const { username, password, room } = Qs.parse(location.search, {
     ignoreQueryPrefix: true
 });
 
@@ -18,7 +18,6 @@ socket.on("roomUsers", ({ room, users }) => {
 
 socket.on("message", message => {
     outputMessage(message);
-
     chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
@@ -41,7 +40,6 @@ function outputMessage(message) {
 }
 
 function outputRoomName(room) {
-    debugger
     roomName.innerText = room;
 }
 

@@ -1,10 +1,15 @@
 const { User } = require("../model/index");
-
+const uniqid = require("uniqid");
 
 class UserService {
-    static async createUser (id, username, room) {
-        const newUser = new User({ id, username, room });
+    static async createUser (username, room) {
+        const id = uniqid()
+        const newUser = new User({id, username, room });
         return await newUser.save();
+    }
+
+    static async updateUser (id, socketId) {
+        await User.findByIdAndUpdate({id}, {socketId});
     }
     
     static async getCurrentUser(id) {
