@@ -3,40 +3,40 @@ const socketio = require("socket.io");
 const formatMessages = require("../utils/messages");
 const UserService = require("./user.service");
 const RoomService = require("./room.service");
-const { Room } = require("../model");
 
 const botName = process.env.BOT_NAME;
 
 function socket(server) {
     const io = socketio(server);
     io.on("connection", async socket => {
-        socket.on("joinRoom", async ({ username, room }) => {
+        let user
+        socket.on("joinRoom", async ({ username, password, roomPassword, room }) => {
+            user = await UserService.updateUser({ username }, { room });
             socket.join(user.room);
-    
+            
             socket.emit("message", formatMessages(botName ,`Welcome to the ChatBoard ${user.username}`));
-    
+            
             socket.broadcast.to(user.room).emit("message", formatMessages(botName,`${user.username} has joind the chat`));
-    
+            
             io.to(user.room).emit("roomUsers", {
                 room: user.room,
                 users: await UserService.getRoomUsers(user.room)
             })
-        
         })
 
-        io.on("roomNames", ()=>{
-            socket.emit("roomNames", "hello")
-        })
-    
+        socket.emit("roomNames", await RoomService.getAllRooms())
+        
         socket.on("chatMessage", async (msg) => {
-            const user = await UserService.getCurrentUser(socket.id);
             io.to(user.room).emit("message", formatMessages(user.username, msg));
+        })
+        socket.on("content", async (content) => {
+            await RoomService.updateRoom({ room: user.room}, { content })
         })
     
         socket.on("disconnect", async () => {
-            const user = await UserService.userLeave(socket.id);
-    
+            user = await UserService.getCurrentUser({ username: user ? user.username : undefined });
             if(user) {
+                await UserService.userLeave({ username: user.username})
                 io.to(user.room).emit("roomUsers", {
                     room: user.room,
                     users: await UserService.getRoomUsers(user.room)

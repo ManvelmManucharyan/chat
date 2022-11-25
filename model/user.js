@@ -9,10 +9,10 @@ const userSchema = new Schema({
     username: {
         type: String,
     },
-    room: {
+    password: {
         type: String,
     },
-    socketId: {
+    room: {
         type: String,
     }
 }, { timestamps: true });

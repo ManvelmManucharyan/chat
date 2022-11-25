@@ -1,15 +1,16 @@
 const chatForm = document.getElementById("chat-form");
 const chatMessages = document.querySelector(".chat-messages");
+const content = document.getElementById("chat-messages").ge;
 const roomName = document.getElementById("room-name");
 const userList = document.getElementById("users");
 
 const socket = io();
 
-const { username, password, room } = Qs.parse(location.search, {
+const { username, password, roomPassword, room } = Qs.parse(location.search, {
     ignoreQueryPrefix: true
 });
 
-socket.emit("joinRoom", { username, room });
+socket.emit("joinRoom", { username, password, roomPassword, room });
 
 socket.on("roomUsers", ({ room, users }) => {
     outputRoomName(room);

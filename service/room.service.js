@@ -8,8 +8,8 @@ class RoomService {
         return await newRoom.save();
     }
 
-    static async updateRoom (id, content) {
-        await Room.findByIdAndUpdate({id}, {content});
+    static async updateRoom (findBy, update) {
+        await Room.findOneAndUpdate(findBy, update);
     }
 
     static async getAllRooms () {

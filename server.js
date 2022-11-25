@@ -12,8 +12,8 @@ const server = http.createServer(app);
 
 app.use(bodyParser.urlencoded({limit: '5000mb', extended: true, parameterLimit: 100000000000}));
 app.use(express.static(path.join(__dirname, "public")));
-socket(server);
 app.use("/", rout)
+socket(server);
 connect()
 
 server.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
